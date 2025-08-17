@@ -311,41 +311,41 @@
             }
         }
 
-      //   async function trackOrder() {
+        async function trackOrder() {
         
-      //   const orderId = document.getElementById('orderId').value.trim();
-      //   const resultDiv = document.getElementById('result');
+        const orderId = document.getElementById('orderId').value.trim();
+        const resultDiv = document.getElementById('result');
 
-      //   if (!orderId) {
-      //     resultDiv.textContent = 'لطفاً شناسه سفارش را وارد کنید.';
-      //     return;
-      //   }
+        if (!orderId) {
+          resultDiv.textContent = 'لطفاً شناسه سفارش را وارد کنید.';
+          return;
+        }
 
-      //   resultDiv.textContent = 'در حال دریافت اطلاعات...';
+        resultDiv.textContent = 'در حال دریافت اطلاعات...';
 
-      //   try {
-      //     const response = await fetch(
-      //       `https://api.postex.ir/api/v1/tracking/by-order-id/${encodeURIComponent(orderId)}`,
-      //       {
-      //         method: 'GET',
-      //         headers: {
-      //           'Content-Type': 'application/json',
-      //           'x-api-key': 'postex_66b27f0c5624436FaBjNxK18x5WPLahsIvkyhepXGaXcg'
-      //         }
-      //       }
-      //     );
+        try {
+          const response = await fetch(
+            `https://api.postex.ir/api/v1/tracking/by-order-id/${encodeURIComponent(orderId)}`,
+            {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': 'postex_66b27f0c5624436FaBjNxK18x5WPLahsIvkyhepXGaXcg'
+              }
+            }
+          );
 
-      //     if (!response.ok) {
-      //       const errorText = await response.text();
-      //       throw new Error(`خطای HTTP ${response.status}: ${errorText}`);
-      //     }
+          if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`خطای HTTP ${response.status}: ${errorText}`);
+          }
 
-      //     const data = await response.json();
-      //     resultDiv.textContent = JSON.stringify(data, null, 2);
-      //   } catch (err) {
-      //     resultDiv.textContent = 'خطا در دریافت اطلاعات:\n' + err.message;
-      //   }
-      // }
+          const data = await response.json();
+          resultDiv.textContent = JSON.stringify(data, null, 2);
+        } catch (err) {
+          resultDiv.textContent = 'خطا در دریافت اطلاعات:\n' + err.message;
+        }
+      }
 
         function initializeApp() {
             try {
@@ -369,7 +369,7 @@
                 // Display user information
                 displayUserInfo(user);
                 
-                // trackOrder();
+                trackOrder();
 
                 // console.log("here")
                 // console.log(window.Eitaa.WebApp.platform)
