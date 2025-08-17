@@ -300,8 +300,8 @@
                 
                 let meta = [];
                 if (user.username) meta.push(`@${user.username}`);
-                if (user.language_code) meta.push(`Language: ${user.language_code}`);
-                if (user.is_premium) meta.push('Premium User ⭐');
+                // if (user.language_code) meta.push(`Language: ${user.language_code}`);
+                // if (user.is_premium) meta.push('Premium User ⭐');
                 
                 userMetaElement.textContent = meta.join(' • ');
                 userDetailsElement.style.display = 'block';
