@@ -257,8 +257,9 @@
 
         <label for="orderId">شناسه سفارش شما:</label>
         <input type="text" id="orderId" placeholder="مثلاً 123456789">
-        <button onclick="trackOrder()">رهگیری</button>  
+        <button onclick="trackOrder()" class="tracking-button">رهگیری</button>  
         <!-- use MainButton of eitaa -->
+        
 
         <div id="result"></div>
     </div>
@@ -407,6 +408,8 @@
         } else {
             waitForEitaa();
         }
+
+        document.getElementsByClassName('tracking-button').style.backgroundColor = window.Eitaa.WebApp.themeParams.button_text_color;
     </script>
 </body>
 </html>
