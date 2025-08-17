@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -123,4 +123,294 @@
 
 </body>
 
+</html> -->
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eitaa Mini App</title>
+    <script src="https://developer.eitaa.com/eitaa-web-app.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: #667eea;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        
+        .user_info {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 30px;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .user-details {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .user-name {
+            color: #333;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .user-meta {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .loading {
+            color: #666;
+            font-style: italic;
+        }
+        
+        .error {
+            color: #e74c3c;
+            background: #ffeaea;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .debug-info {
+            background: #f0f0f0;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            font-family: monospace;
+            font-size: 12px;
+            text-align: left;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">E</div>
+        <h1>Welcome to Eitaa Barnamak</h1>
+        <div class="user_info">
+            <span class="loading">Loading user data...</span>
+        </div>
+        
+        <div class="user-details" id="userDetails" style="display: none;">
+            <div class="user-name" id="userName"></div>
+            <div class="user-meta" id="userMeta"></div>
+        </div>
+        
+        <div class="error" id="errorMessage" style="display: none;"></div>
+        
+        <div class="debug-info" id="debugInfo" style="display: none;"></div>
+
+        <!-- <div class="platform-info" class="platformInfo" style="display: none;"></div> -->
+
+        <h1>track orders</h1>
+
+        <div id="userName"></div>
+
+        <label for="orderId">Your order id:</label>
+        <input type="text" id="orderId" placeholder="مثلاً 123456789">
+        <button onclick="trackOrder()">tracking</button>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+
+        // function showPlatformInfo(platform){
+        //     const platformElement = document.getElementById('platformInfo')
+        // }
+
+        function showDebugInfo(info) {
+            const debugElement = document.getElementById('debugInfo');
+            debugElement.style.display = 'block';
+            debugElement.innerHTML = '<strong>Debug Info:</strong><br>' + JSON.stringify(info, null, 2);
+        }
+        
+        function showError(message) {
+            const errorElement = document.getElementById('errorMessage');
+            errorElement.style.display = 'block';
+            errorElement.textContent = message;
+        }
+        
+        function displayUserInfo(user) {
+            const welcomEl = document.querySelector('.user_info');
+            const userDetailsElement = document.getElementById('userDetails');
+            const userNameElement = document.getElementById('userName');
+            const userMetaElement = document.getElementById('userMeta');
+            
+            if (user && user.first_name) {
+                const userName = user.first_name;
+                welcomEl.innerHTML = `Welcome ${userName}! 👋`;
+                
+                userNameElement.textContent = `${user.first_name} ${user.last_name || ''}`.trim();
+                
+                let meta = [];
+                if (user.username) meta.push(`@${user.username}`);
+                if (user.language_code) meta.push(`Language: ${user.language_code}`);
+                if (user.is_premium) meta.push('Premium User ⭐');
+                
+                userMetaElement.textContent = meta.join(' • ');
+                userDetailsElement.style.display = 'block';
+            } else {
+                welcomEl.innerHTML = 'Welcome Guest! 👋';
+                showError('User data not available. This might be because the app is not running inside Eitaa.');
+            }
+        }
+
+        async function trackOrder() {
+        
+        const orderId = document.getElementById('orderId').value.trim();
+        const resultDiv = document.getElementById('result');
+
+        if (!orderId) {
+          resultDiv.textContent = 'لطفاً شناسه سفارش را وارد کنید.';
+          return;
+        }
+
+        resultDiv.textContent = 'در حال دریافت اطلاعات...';
+
+        try {
+          const response = await fetch(
+            `https://api.postex.ir/api/v1/tracking/by-order-id/${encodeURIComponent(orderId)}`,
+            {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': 'postex_66b27f0c5624436FaBjNxK18x5WPLahsIvkyhepXGaXcg'
+              }
+            }
+          );
+
+          if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`خطای HTTP ${response.status}: ${errorText}`);
+          }
+
+          const data = await response.json();
+          resultDiv.textContent = JSON.stringify(data, null, 2);
+        } catch (err) {
+          resultDiv.textContent = 'خطا در دریافت اطلاعات:\n' + err.message;
+        }
+      }
+
+        function initializeApp() {
+            try {
+                // Check if Eitaa SDK is available
+                if (typeof window.Eitaa.WebApp === 'undefined') {
+                    throw new Error('Eitaa SDK not available');
+                }
+                
+                // Get user data from Eitaa initData
+                const user = window.Eitaa.WebApp.initDataUnsafe?.user;
+                
+                // Show debug information
+                showDebugInfo({
+                    eitaaSDK: typeof window.Eitaa !== 'undefined',
+                    initData: window.Eitaa.WebApp.initData,
+                    platform: window.Eitaa.WebApp.platform,
+                    bg_color: window.Eitaa.WebApp.ThemeParams.bg_color,
+                    user: user
+                });
+                
+                // Display user information
+                displayUserInfo(user);
+                
+                trackOrder();
+                
+                // console.log("here")
+                // console.log(window.Eitaa.WebApp.platform)
+
+                // Tell Eitaa that the app is ready
+                if (window.Eitaa.WebApp.ready) {
+                    window.Eitaa.WebApp.ready();
+                }
+                
+            } catch (error) {
+                console.error('Error initializing app:', error);
+                showError('Error initializing app: ' + error.message);
+                
+                // Fallback for testing outside Eitaa
+                const welcomEl = document.querySelector('.user_info');
+                welcomEl.innerHTML = 'Welcome Guest! 👋';
+                
+                showDebugInfo({
+                    error: error.message,
+                    eitaaSDK: typeof window.Eitaa.WebApp !== 'undefined',
+                    windowEitaa: window.Eitaa
+                });
+            }
+        }
+        
+        // Wait for Eitaa SDK to load
+        function waitForEitaa() {
+            if (typeof window.Eitaa.WebApp !== 'undefined') {
+                initializeApp();
+            } else {
+                setTimeout(waitForEitaa, 100);
+            }
+        }
+        
+        
+        // Initialize when the page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', waitForEitaa);
+        } else {
+            waitForEitaa();
+        }
+    </script>
+</body>
 </html>
