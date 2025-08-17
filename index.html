@@ -294,19 +294,20 @@
             
             if (user && user.first_name) {
                 const userName = user.first_name;
-                welcomEl.innerHTML = `Welcome ${userName}! 👋`;
+                const lastName = user.last_name;
+                welcomEl.innerHTML = `سلام ${userName} ${lastName}! 👋`;
                 
-                userNameElement.textContent = `${user.first_name} ${user.last_name || ''}`.trim();
+                // userNameElement.textContent = `${user.first_name} ${user.last_name || ''}`.trim();
                 
-                let meta = [];
-                if (user.username) meta.push(`@${user.username}`);
+                // let meta = [];
+                // if (user.username) meta.push(`@${user.username}`);
                 // if (user.language_code) meta.push(`Language: ${user.language_code}`);
                 // if (user.is_premium) meta.push('Premium User ⭐');
                 
-                userMetaElement.textContent = meta.join(' • ');
-                userDetailsElement.style.display = 'block';
+                // userMetaElement.textContent = meta.join(' • ');
+                // userDetailsElement.style.display = 'block';
             } else {
-                welcomEl.innerHTML = 'Welcome Guest! 👋';
+                welcomEl.innerHTML = 'سلام عزیز 👋';
                 showError('User data not available. This might be because the app is not running inside Eitaa.');
             }
         }
